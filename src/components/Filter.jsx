@@ -8,7 +8,7 @@ const Filter = () => {
     const dispatch = useDispatch();
 
     const handleFilterChange = evt => {
-        dispatch(changeFilter(evt.curretTarget.value));
+        dispatch(changeFilter(evt.currentTarget.value));
         };
 
     return (
