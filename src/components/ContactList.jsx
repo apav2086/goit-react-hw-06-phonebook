@@ -14,18 +14,19 @@ const ContactList = () => {
   return (
     <div>
           <h2>Contacts</h2>
-          <p>Find contacts by name</p>
-      <ul>
-        {contacts
-          .filter(({ name }) => name.toLowerCase().includes(filterValue)).map(({ id, name, number }) => (
-            <li   className={css.listItem} key={id}>
-                <p>
+    
+      {contacts && (
+        <ul>
+          {contacts.filter(({ name }) => name.toLowerCase().includes(filterValue)).map(({ id, name, number }) => (
+            <li className={css.listItem} key={id}>
+              <p>
                 {name} : {number}
-                </p>
-                <button type="button" onClick={() => handleDeleteContact(id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+              </p>
+              <button type="button" onClick={() => handleDeleteContact(id)}>Delete</button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

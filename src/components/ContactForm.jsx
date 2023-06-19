@@ -5,63 +5,64 @@ import { getItems, getFilter } from 'redux/selectors';
 import { nanoid } from 'nanoid';
 
 function ContactForm() {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [name, setName] = useState(''); // State variable for storing the name input value
+  const [number, setNumber] = useState(''); // State variable for storing the number input value
 
-  const contacts = useSelector(getItems);
-  const filterValue = useSelector(getFilter);
-  const dispatch = useDispatch();
+  const contacts = useSelector(getItems); // Accessing the contacts from Redux store
+  const filterValue = useSelector(getFilter); // Accessing the filter value from Redux store
+  const dispatch = useDispatch(); // Hook for dispatching Redux actions
 
   const handleContactInfo = () => {
-    const data = { id: nanoid(), name: name, number: number };
-    dispatch(addContact(data));
-    if (filterValue !== '') {
-      dispatch(changeFilter(''));
+    if (name.trim() === '' || number.trim() === '') {
+      return; // Exit the function if name or number is empty
     }
+
+    const data = { id: nanoid(), name: name, number: number };
+    dispatch(addContact(data)); // Dispatching the addContact action with contact data
+
+    if (filterValue !== '') {
+      dispatch(changeFilter('')); // Clearing the filter if it is not empty
+    }
+
+    resetForm(); // Resetting the form inputs
   };
 
   const handleSubmit = evt => {
     evt.preventDefault();
 
-    if (contacts.find(contact =>
-      contact.name.toLowerCase() === name.toLowerCase()));
-    if (filterValue !== '') {
-      dispatch(changeFilter(''));
+    if (
+      contacts.find(
+        contact => contact.name.toLowerCase() === name.toLowerCase()
+      )
+    ) {
+      if (filterValue !== '') {
+        dispatch(changeFilter('')); // Clearing the filter if it is not empty
+      }
+      return alert(`${name} is already in contacts`);
     }
 
-    return alert(`${name} is already in contacts`);
-  }
-
-  
-    const resetForm = () => { 
-    setName('');
-    setNumber('');
+    handleContactInfo(); // Handling the contact information submission
   };
 
+  const resetForm = () => {
+    setName(''); // Resetting the name input value
+    setNumber(''); // Resetting the number input value
+  };
 
-  handleContactInfo();
-  resetForm();
-
-
-    
   const onChange = evt => {
     const { name, value } = evt.currentTarget;
 
     switch (name) {
       case 'name':
-        setName(value);
+        setName(value); // Updating the name input value
         break;
-  
-      case 'number': {
-        setNumber(value);
+      case 'number':
+        setNumber(value); // Updating the number input value
         break;
-      }
       default:
         return;
     }
   };
-
-
 
   return (
     <div>
@@ -71,8 +72,6 @@ function ContactForm() {
           <input
             type="text"
             name="name"
-            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan."
             required
             value={name}
             onChange={onChange}
@@ -83,8 +82,6 @@ function ContactForm() {
           <input
             type="tel"
             name="number"
-            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required
             value={number}
             onChange={onChange}
@@ -93,7 +90,7 @@ function ContactForm() {
         <button type="submit">Add contact</button>
       </form>
     </div>
-  )
+  );
 }
 
 export default ContactForm;
